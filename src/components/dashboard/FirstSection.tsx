@@ -32,7 +32,7 @@ const FirstSection: React.FunctionComponent = () => {
   }, []);
 
   const copyToClipboard = () => {
-    copy(`https://cryptovesto.onrender.com/?ref=${user.username}`);
+    copy(`https://cryptovesto.vercel.app/?ref=${user.username}`);
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
@@ -126,7 +126,7 @@ const FirstSection: React.FunctionComponent = () => {
             <br />
             NOTE: Referrals is optional
             <p className="fw-bold text-white p-2">
-              https://cryptovesto.onrender.com/?ref={user.username}
+              https://cryptovesto.vercel.app/?ref={user.username}
             </p>
             <p>
               <button
