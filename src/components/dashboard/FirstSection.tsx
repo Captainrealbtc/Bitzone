@@ -48,7 +48,7 @@ const FirstSection: React.FunctionComponent = () => {
     <section id="dashboard" className="hero-sec">
       <div className="container">
         <div className="row">
-          <div className="col-md-6 col-sm-12 mt-2">
+          <div className="col-md-6 col-sm-12 mt-5">
             <div className="card">
               <h5 className="card-header text-center p-3">
                 Bitcoin BTC Price: ${btcPrice? btcPrice: 0}
@@ -73,7 +73,7 @@ const FirstSection: React.FunctionComponent = () => {
             </div>
           </div>
 
-          <div className="col-md-6 col-sm-12 mt-2">
+          <div className="col-md-6 col-sm-12 mt-5">
             <div className="card">
               <h5 className="card-header text-center p-3">
                 Ethereum ETH Price: ${ethPrice?ethPrice:0}
