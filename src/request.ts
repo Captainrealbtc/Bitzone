@@ -9,7 +9,7 @@ export const register = async (credentials: any) => {
     }
     if (res.status === 210) return res;
   } catch (err) {
-    console.log(err);
+    return {status: 400, data: "check your internet connection and try again"}
   }
 };
 
@@ -22,7 +22,7 @@ export const login = async (credentials: any) => {
     }
     if (res.status === 210) return res;
   } catch (err) {
-    console.log(err);
+    return {status: 400, data: "check your internet connection and try again"}
   }
 };
 
@@ -35,7 +35,7 @@ export const createBtcDeposit = async (credentials: any) => {
     }
     if (res.status === 210) return res;
   } catch (err) {
-    console.log(err);
+    return {status: 400, data: "check your internet connection and try again"}
   }
 };
 
@@ -48,7 +48,7 @@ export const createEthDeposit = async (credentials: any) => {
     }
     if (res.status === 210) return res;
   } catch (err) {
-    console.log(err);
+    return {status: 400, data: "check your internet connection and try again"}
   }
 };
 
@@ -60,7 +60,8 @@ export const createBtcWithdrawal = async (credentials: any) => {
     }
     if (res.status === 210) return res;
   } catch (err) {
-    console.log(err);
+    console.log(err)
+    return {status: 400, data: "check your internet connection and try again"}
   }
 };
 
@@ -72,7 +73,7 @@ export const createEthWithdrawal = async (credentials: any) => {
     }
     if (res.status === 210) return res;
   } catch (err) {
-    console.log(err);
+    return {status: 400, data: "check your internet connection and try again"}
   }
 };
 
@@ -84,6 +85,6 @@ export const getData = async (route: string) => {
       return res
     }
   }catch(err){
-    console.log(err)
+    return {status: 400, data: "check your internet connection and try again"}
   }
 } 

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 import { handleInput } from "../../helpers/inputs";
-import { createEthWithdrawal } from "../../request";
-import { setSuccMsg, setErrMsg, clrMsg } from "../../helpers/messages";
+import {errorMessage} from "../../helpers/messages";
 import { useRef } from "react";
 
 type Info = {
@@ -17,15 +16,10 @@ const ETHWithdrawalForm: React.FunctionComponent = () => {
     username: "",
   });
 
+  const [loading, setLoading] = useState(false)
+
   const [cookies] = useCookies();
   const user = cookies.user;
-
-  const [msg, setMsg] = useState({ success: "", error: "" });
-  const [bools, setBools] = useState({
-    error: false,
-    success: false,
-    loading: false,
-  });
 
   const modalRef = useRef<any>();
 
@@ -35,24 +29,19 @@ const ETHWithdrawalForm: React.FunctionComponent = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setBools({...bools, loading: true})
+    setLoading(true)
     if (info.username === "") {
-      setErrMsg(setBools, setMsg, "Fill in username");
-      clrMsg(setBools, setMsg);
+      errorMessage(setLoading, "Fill in username")
     } else if (info.amount === 0) {
-      setErrMsg(setBools, setMsg, "Amount must be greater than 0");
-      clrMsg(setBools, setMsg);
+      errorMessage(setLoading, "Amount must be greater than 0")
     } else if (info.wallet_address === "") {
-      setErrMsg(setBools, setMsg, "Fill in wallet address");
-      clrMsg(setBools, setMsg);
-    } else if (info.amount > user.eth_balance) {
-      setErrMsg(setBools, setMsg, "Oops! insufficient balance");
-      clrMsg(setBools, setMsg);
+      errorMessage(setLoading, "Fill in wallet address");
+    } else if (info.amount > user.btc_balance) {
+      errorMessage(setLoading, "Oops! insufficient balance");
     } else if (user.username.toLowerCase() !== info.username.toLowerCase()) {
-      setErrMsg(setBools, setMsg, "Wrong username");
-      clrMsg(setBools, setMsg);
+      errorMessage(setLoading, "Wrong username");
     } else {
-      clrMsg(setBools, setMsg);
+      reset()
       modalRef.current.click();
     }
   };
@@ -113,27 +102,8 @@ const ETHWithdrawalForm: React.FunctionComponent = () => {
                     />
                   </div>
                 </div>
-                {bools.error && (
-                  <div className="form-group row">
-                    <div className="col-md-12">
-                      <p className="text-danger" style={{ fontWeight: 500 }}>
-                        {msg.error}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {bools.success && (
-                  <div className="form-group row">
-                    <div className="col-md-12">
-                      <p className="text-success" style={{ fontWeight: 500 }}>
-                        {msg.success}
-                      </p>
-                    </div>
-                  </div>
-                )}
                 <button
-                  disabled={bools.loading}
+                  disabled={loading}
                   type="submit"
                   className="theme-btn w-100"
                 >

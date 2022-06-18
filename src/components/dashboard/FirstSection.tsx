@@ -29,7 +29,7 @@ const FirstSection: React.FunctionComponent = () => {
         setUser(use[0]);
       })
       .catch();
-  }, []);
+  }, [LoggedUser]);
 
   const copyToClipboard = () => {
     copy(`https://cryptovesto.vercel.app/?ref=${user.username}`);

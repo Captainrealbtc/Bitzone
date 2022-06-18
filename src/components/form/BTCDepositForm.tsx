@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 import { handleInput } from "../../helpers/inputs";
+import { errorMessage, successMessage } from "../../helpers/messages";
 import { createBtcDeposit } from "../../request";
-import { setSuccMsg, setErrMsg, clrMsg } from "../../helpers/messages";
 
 type Info = {
   wallet_address: string;
@@ -22,12 +22,7 @@ const BTCDepositForm: React.FunctionComponent = () => {
     date: "",
   });
 
-  const [msg, setMsg] = useState({ success: "", error: "" });
-  const [bools, setBools] = useState({
-    error: false,
-    success: false,
-    loading: false,
-  });
+ const [loading, setLoading] =useState(false)
 
   const reset = () => {
     setInfo({
@@ -40,35 +35,26 @@ const BTCDepositForm: React.FunctionComponent = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setBools({...bools, loading: true})
+    setLoading(true)
     if (info.wallet_address === "") {
-      setErrMsg(setBools, setMsg, "Fill in wallet address");
-      clrMsg(setBools, setMsg);
+      errorMessage(setLoading, "Fill in wallet address")
     } else if (info.date === "") {
-      setErrMsg(setBools, setMsg, "select date");
-      clrMsg(setBools, setMsg);
+      errorMessage(setLoading, "Select date")
     } else if (info.amount === 0) {
-      setErrMsg(setBools, setMsg, "Amount must be greater than 0");
-      clrMsg(setBools, setMsg);
-    } else if (info.amount < user.btc_balance) {
-      setErrMsg(setBools, setMsg, "Oops! balance is insufficient");
-      clrMsg(setBools, setMsg);
+      errorMessage(setLoading, "Enter amount greater than 0")
     } else {
       try {
         const res = await createBtcDeposit(info);
         if (res?.status === 200) {
-          setSuccMsg(
-            setBools,
-            setMsg,
-            "Deposit submitted successfully. Account would be updated within 24 hours"
+          successMessage(
+            setLoading,
+            "Deposit submitted successfully. Account would be updated within 3 hours."
           );
-          setTimeout(() => {
-            setBools({ ...bools, success: false });
-          }, 5000);
           reset();
+        }else if(res?.status === 400){
+          errorMessage(setLoading, `${res?.data}`);
         } else {
-          setErrMsg(setBools, setMsg, res?.data);
-          clrMsg(setBools, setMsg);
+          errorMessage(setLoading, `${res?.data}`)
         }
       } catch (err) {}
     }
@@ -124,31 +110,12 @@ const BTCDepositForm: React.FunctionComponent = () => {
                     />
                   </div>
                 </div>
-                {bools.error && (
-                  <div className="form-group row">
-                    <div className="col-md-12">
-                      <p className="text-danger" style={{ fontWeight: 500 }}>
-                        {msg.error}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {bools.success && (
-                  <div className="form-group row">
-                    <div className="col-md-12">
-                      <p className="text-success" style={{ fontWeight: 500 }}>
-                        {msg.success}
-                      </p>
-                    </div>
-                  </div>
-                )}
                 <button
-                  disabled={bools.loading}
+                  disabled={loading}
                   type="submit"
                   className="theme-btn theme-btn-2 w-100"
                 >
-                  {bools.loading
+                  {loading
                     ? "Submitting request ..."
                     : "Request confirmation"}
                 </button>

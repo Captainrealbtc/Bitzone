@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 export const setErrMsg = (setBools: any, setMsg: any, msg: any) => {
     setBools((prev: any) => ({ ...prev, error: true, loading: false }));
     setMsg((prev: any) => ({ ...prev, error: msg }));
@@ -19,3 +20,13 @@ export const setErrMsg = (setBools: any, setMsg: any, msg: any) => {
        }));
     }, 2000);
  };
+
+ export const successMessage = (setLoading: any, message: any) => {
+   setLoading(false)
+   toast.success(message, {autoClose: 2000})
+ }
+
+ export const errorMessage = (setLoading: any, message: any) => {
+   setLoading(false)
+   toast.error(message, {autoClose: 2000})
+ }

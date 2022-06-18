@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { handleInput } from "../../helpers/inputs";
 import { register } from "../../request";
-import { setErrMsg, clrMsg } from "../../helpers/messages";
+import {
+  errorMessage,
+  successMessage,
+} from "../../helpers/messages";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { REFUSED } from "dns";
 
@@ -31,12 +34,7 @@ const RegisterForm: React.FunctionComponent = () => {
     setUser({ ...user, referred_by: ref });
   }, []);
 
-  const [msg, setMsg] = useState({ success: "", error: "" });
-  const [bools, setBools] = useState({
-    error: false,
-    success: false,
-    loading: false,
-  });
+  const [loading, setLoading] = useState(false);
 
   const reset = () => {
     setUser({
@@ -50,34 +48,34 @@ const RegisterForm: React.FunctionComponent = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setBools({...bools, loading: true})
+    setLoading(true);
     if (user.username === "") {
-      setErrMsg(setBools, setMsg, "All field required");
-      clrMsg(setBools, setMsg);
+      errorMessage(setLoading, "Fill in username field");
     } else if (user.email === "") {
-      setErrMsg(setBools, setMsg, "All field required");
-      clrMsg(setBools, setMsg);
+      errorMessage(setLoading, "Fill in email field");
     } else if (user.password === "") {
-      setErrMsg(setBools, setMsg, "All field required");
-      clrMsg(setBools, setMsg);
+      errorMessage(setLoading, "Fill in password field");
     } else if (user.confirmPassword === "") {
-      setErrMsg(setBools, setMsg, "All field required");
-      clrMsg(setBools, setMsg);
+      errorMessage(setLoading, "Fill in confirm password field");
     } else if (user.password.localeCompare(user.confirmPassword) !== 0) {
-      setErrMsg(setBools, setMsg, "Password does not match");
-      clrMsg(setBools, setMsg);
+      errorMessage(setLoading, "The two password inputed don't match");
     } else {
       try {
         const res = await register(user);
         if (res?.status === 200) {
           reset();
           setCookies("user", res.data, { path: "/" });
+          successMessage(setLoading, "Account created successfully!");
           navigate("/dashboard");
+        } else if (res?.status === 400) {
+          errorMessage(setLoading, `${res?.data}`);
         } else {
-          setErrMsg(setBools, setMsg, res?.data);
-          clrMsg(setBools, setMsg);
+          if (res?.status !== 200 && res?.data) {
+            errorMessage(setLoading, `${res?.data}`);
+          }
         }
       } catch (err) {
+        errorMessage(setLoading, "Internal server error");
       }
     }
   };
@@ -152,28 +150,12 @@ const RegisterForm: React.FunctionComponent = () => {
                   </a>
                 </p>
 
-                {bools.error && (
-                  <div className="form-group row">
-                    <div className="col-md-12">
-                      <p className="text-danger" style={{ fontWeight: 500 }}>
-                        {msg.error}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {bools.success && (
-                  <div className="form-group row">
-                    <div className="col-md-12">
-                      <p className="text-success" style={{ fontWeight: 500 }}>
-                        {msg.success}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                <button disabled={bools.loading} type="submit" className="theme-btn w-100">
-                  Register{bools.loading? "...": ""}
+                <button
+                  disabled={loading}
+                  type="submit"
+                  className="theme-btn w-100"
+                >
+                  {loading ? "creating account ..." : "Register"}
                 </button>
               </form>
             </div>

@@ -10,6 +10,7 @@ import {
   randomDecimalNumber,
   randomWholeNumber,
 } from "./helpers/generator";
+import { toast } from "react-toastify";
 
 function App() {
   const [info, setInfo] = useState<any>({});
@@ -19,37 +20,25 @@ function App() {
     setInterval(() => {
       const randBtcAddress = generateRandomAddress("bc1", 42);
       const btc = randomDecimalNumber(0.24, 1, 6);
-      setInfo({ ...info, address: randBtcAddress, price: btc, symbol: "BTC" });
-      setTransaction(true);
-      setTimeout(() => {
-        setTransaction(false);
-      }, 2000);
-    }, randomWholeNumber(40000, 100000));
+      if(window.location.pathname !== "/"){
+      toast.success(`${btc} BTC was sent to ${randBtcAddress}`, {autoClose: 2000})
+      }
+    }, randomWholeNumber(40000, 60000));
   }, []);
 
   useEffect(() => {
     setInterval(() => {
       const randEthAddress = generateRandomAddress("0x", 42);
       const eth = randomDecimalNumber(4.5, 50, 6);
-      setInfo({ ...info, address: randEthAddress, price: eth, symbol: "ETH" });
-      setTransaction(true);
-      setTimeout(() => {
-        setTransaction(false);
-      }, 2000);
-    }, randomWholeNumber(100000, 160000));
+      if(window.location.pathname !== "/"){
+      toast.success(`${eth} ETH was sent to ${randEthAddress}`, {autoClose: 2000})
+      }
+    }, randomWholeNumber(60000, 90000));
   }, []);
 
   return (
     <Fragment>
       <Routes />
-      {window.location.pathname !== "/" && transaction && (
-        <div className="d-flex align-items-center justify-content-center m-1">
-          <p className="pop-up text-center p-1 text-success">
-            {info?.price}
-            {info.symbol} sent to {info.address}
-          </p>
-        </div>
-      )}
     </Fragment>
   );
 }
