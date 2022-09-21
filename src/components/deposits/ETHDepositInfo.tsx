@@ -35,7 +35,7 @@ const ETHDepositInfo: React.FunctionComponent = () => {
                 className="mb-55 wow fadeInUp text-center text-white fw-bold"
                 data-wow-delay=".4s"
               >
-               NOTE: Minimum of Ethereum ETH worth $3000 should be sent.
+               NOTE: Minimum of Ethereum ETH worth $300 should be sent.
               </p>
 
             </div>
