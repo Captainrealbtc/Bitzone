@@ -35,7 +35,7 @@ const BTCDepositInfo: React.FunctionComponent = () => {
                 className="mb-55 wow fadeInUp text-center text-white fw-bold"
                 data-wow-delay=".4s"
               >
-               NOTE: Minimum of Bitcoin BTC worth $3000 should be sent.
+               NOTE: Minimum of Bitcoin BTC worth $300 should be sent.
               </p>
               
             </div>
