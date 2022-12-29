@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export default axios.create({
-    baseURL: "https://cryptovesto.herokuapp.com",
+    baseURL: "https://cryptovesto-server.onrender.com",
     timeout: 10000,
  });
  
