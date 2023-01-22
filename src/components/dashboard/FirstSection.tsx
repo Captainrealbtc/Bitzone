@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getCookie } from "cookies-next";
 import copy from "copy-to-clipboard";
+import moment from "moment";
 import axios from "../../axios";
 import TransactionGenerator from "../TransactionGenerator";
 
@@ -41,10 +42,30 @@ const FirstSection: React.FunctionComponent = () => {
       }, 2000);
    };
 
+   const deposit_date = moment(LoggedUser?.first_deposit_date).add("days", 1);
+   const today = moment(new Date()).add("days", 1);
+   const interval = today.diff(deposit_date, "days");
+   const compoundInterest = (
+      p: number,
+      r: number,
+      t: number,
+      n: number
+   ): any => {
+      const amount = p * Math.pow(1 + r / n, n * t);
+      const interest = amount - p;
+      return interest;
+   };
+
+   const btc_balance =
+      user?.btc_balance + compoundInterest(user?.btc_balance, 0.1, interval, 1);
+
+   const eth_balance =
+      user?.eth_balance + compoundInterest(user?.eth_balance, 0.1, interval, 1);
+
    const btcPrice = Math.round(coinsList[0]?.price);
    const ethPrice = Math.round(coinsList[1]?.price);
-   const currentBTCPrice = Math.round(btcPrice * user?.btc_balance);
-   const currentETHPrice = Math.round(ethPrice * user?.eth_balance);
+   const currentBTCPrice = Math.round(btcPrice * btc_balance);
+   const currentETHPrice = Math.round(ethPrice * eth_balance);
 
    return (
       <section id="dashboard" className="hero-sec">
@@ -59,8 +80,8 @@ const FirstSection: React.FunctionComponent = () => {
                      <div className="align-items-center d-flex justify-content-center">
                         <div className="card-body">
                            <h5 className="card-title p-4">
-                              Your BTC Balance: {user?.btc_balance?.toFixed(6)}{" "}
-                              BTC <br />
+                              Your BTC Balance: {btc_balance?.toFixed(6)} BTC{" "}
+                              <br />
                               <br />
                               Price: ${currentBTCPrice ? currentBTCPrice : 0}
                            </h5>
@@ -87,8 +108,8 @@ const FirstSection: React.FunctionComponent = () => {
                      <div className="align-items-center d-flex justify-content-center">
                         <div className="card-body">
                            <h5 className="card-title p-4">
-                              Your ETH Balance: {user.eth_balance?.toFixed(6)}{" "}
-                              ETH <br />
+                              Your ETH Balance: {eth_balance?.toFixed(6)} ETH{" "}
+                              <br />
                               <br />
                               Price: ${currentETHPrice ? currentETHPrice : 0}
                            </h5>

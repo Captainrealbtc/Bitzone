@@ -155,16 +155,16 @@ const Navbar: React.FunctionComponent = () => {
                            )}
                            {user && (
                               <li className="nav-item">
-                                 <Link
-                                    to=""
-                                    className="page-scroll text-danger fw-bold"
+                                 <button
+                                    className="page-scroll text-danger fw-bold btn btn-default"
                                     onClick={() => {
                                        removeCookies("user");
                                        navigate("/");
+                                       console.log("Login out");
                                     }}
                                  >
                                     Logout
-                                 </Link>
+                                 </button>
                               </li>
                            )}
                         </ul>
